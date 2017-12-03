@@ -1,0 +1,44 @@
+{% extends 'alpha/base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div id="chat-body" class="panel panel-default">
+        <div class="panel-heading">Chat
+            {% if user.is_authenticated %}
+             <a href="{% url 'logout' %}" class="pull-right"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+            {% else %}
+                <p class="pull-right">Please Login with Admin Panel</p>
+            {% endif %}
+        </div>
+
+            <div id="msg-list-div" class="panel-body">
+            <ul id="msg-list" class="list-group">
+                {% for obj in chat %}
+                    {% if obj.user == request.user %}
+                        <li class="text-right list-group-item"><i class="fa fa-user" aria-hidden="true"></i> {{ obj.user }}</li>
+                        <li class="text-right list-group-item">{{ obj.message }}</li>
+                    {% else %}
+                        <li class="text-left list-group-item"><i class="fa fa-user" aria-hidden="true"></i> {{ obj.user }}</li>
+                        <li class="text-left list-group-item">{{ obj.message }}</li>
+                    {% endif %}
+                {% empty %}
+                    <li class="text-right list-group-item">No messages</li>
+                {% endfor %}
+             <script>
+                    var chatlist = document.getElementById('msg-list-div');
+                    chatlist.scrollTop = chatlist.scrollHeight;
+                </script>
+            </ul>
+        </div>
+    </div>
+
+    <form id="chat-form" method="post" action="/post/">
+        <div id="chat-bottom" class="input-group">
+            <input type="text" id="chat-msg" name="chat-msg" class="form-control"/>
+            <span class="input-group-btn">
+                <input class="btn btn-default" id="send" type="submit" value="Send"/>
+            </span>
+        </div>
+    </form>
+
+{% endblock %}
+
